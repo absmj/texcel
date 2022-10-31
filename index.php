@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>TexCel - Mətnlərin təsvirlərə çevirilməsi</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89955739-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-89955739-1');
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <nav class="navbar navbar-light navbar-expand-md d-flex navigation-clean-button">
+                <div class="container">
+                    <div @click="leftSide = !leftSide" class="d-lg-none left-button"><i class="fa fa-align-left"></i></div>
+                    <div id="logo"><img class="img-fluid d-none d-sm-block" src="assets/img/Logo.svg"><img class="img-fluid d-block d-sm-none" src="assets/img/Smlogo.svg"></div>
+                    <div @click="rightSide = !rightSide" class="d-lg-none right-button"><i class="fa fa-align-right"></i></div>
+                </div>
+            </nav>
+        </header>
+        <template v-if="langs">
+            <div class="container">
+                <div class="row">
+                    <div class="col-3 d-none d-lg-block" :class="leftSide ? 'side' : ''">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">{{langs[selectedLang].settings}}
+                                    <button @click="leftSide = false" class="close d-lg-none" type="button" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </h4>
+                                <!-- Filling -->
+                                <div id="filling">
+                                    <h6 class="text-muted card-subtitle mb-2">{{langs[selectedLang].filling}}</h6>
+                                    <div class="form-check">
+                                        <input v-model="image.status" class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            {{langs[selectedLang].coverPhoto}}
+                                        </label>
+                                    </div>
+                                    <hr>
+
+                                    <template v-if="image.status">
+                                        <div class="input-group mb-3">
+                                            <div class="custom-file">
+                                            <input id="coverImage" accept="image/jpeg" type="file" class="custom-file-input">
+                                            <label class="custom-file-label" for="coverImage">Choose file</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-check">
+                                            <input v-model="image.iterations" class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                            <label class="form-check-label" for="defaultCheck2">
+                                                {{langs[selectedLang].iteratePhoto}}
+                                            </label>
+                                        </div>
+                                    </template>
+                                    <hr>
+                                    <div class="form-check">
+                                        <input v-model="repeating" class="form-check-input" type="checkbox" value="" id="defaultCheck3">
+                                        <label class="form-check-label" for="defaultCheck3">
+                                            {{langs[selectedLang].repeat}}
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">{{langs[selectedLang].repeatHelper}}</small>
+                                </div>
+                                <hr>
+                                <hr>
+                                <!-- Shape -->
+                                <div id="filling">
+                                    <h6 class="text-muted card-subtitle mb-2">{{langs[selectedLang].shape}}</h6>
+                                    <div class="form-group">
+                                        <label class="form-label" for="defaultCheck1">
+                                            {{langs[selectedLang].shapeType}}
+                                        </label>
+                                        <select v-model="shape" class="form-control" name="shape" id="">
+                                            <option v-for="(shape, k) in langs[selectedLang].shapes" :key="k" :value="k + 1">{{shape}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-sm-flex justify-content-center justify-content-sm-between" id="settings">
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex justify-content-sm-start" :class="error ? 'text-danger border-danger' : ''">
+                                            <div class="size"><label>{{langs[selectedLang].width}}
+                                                <input v-model="width" name="width" class="form-control" type="number"></label></div>
+                                            <div id="w" class="mt-3">
+                                                ×
+                                            </div>
+                                            <div class="size mr-3"><label>{{langs[selectedLang].height}}
+                                                <input v-model="height" name="height" class="form-control" type="number"></label></div>
+                                            <div class="size">
+                                                <label>{{langs[selectedLang].size}}
+                                                    <select :disabled="error && 0" v-model.number="size" class="form-control">
+                                                        <option value="1" selected="">px</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end pb-2">
+                                        <button :disabled = "(error || !text) && 0" @click="generate" class="btn btn-primary btn-block" type="button">{{langs[selectedLang].generate}}</button>
+                                    </div>
+                                </div>
+                                <small :class="error ? 'text-danger' : 'text-muted'" class="form-text ml-4 ml-sm-0">{{langs[selectedLang][error ?? info] + (info == 'aspectRatio' && !error ? aspectRatio : '') }}</small>
+                            </div>
+                            <div class="col-12">
+                                <textarea v-model="text" class="form-control text-input mt-2" :class="text?.length == 0 ? 'border-danger text-danger' : ''">
+
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 d-none d-lg-block" :class="rightSide ? 'side' : ''">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">{{langs[selectedLang].usersGuide}}
+                                    <button @click="rightSide = false" class="close d-lg-none" type="button" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+
+                                </h4>
+                                <h6 class="text-muted card-subtitle mb-2"></h6>
+                                <div>
+                                    <button @click="loadSample('pochtqutusu.txt')" class="btn btn-primary badge badge-pill badge-primary">C.Məmmədquluzadə, "Poçt qutusu"</button>
+                                    <button @click="loadSample('delikur.txt')" class="btn btn-primary badge badge-pill badge-primary">İ.Şıxlı, "Dəli Kür"</button>
+                                    <button @click="loadSample('kimyager.txt')" class="btn btn-primary badge badge-pill badge-primary">Paulo Coelho, "Kimyagər"</button>
+                                </div>
+                                <hr>
+                                <!-- <hr>
+                                <div>
+                                    <h6 class="text-muted card-subtitle mb-2">How its works?</h6>
+                                    <h6 class="text-muted card-subtitle mb-2">Privacy policy</h6>
+                                </div>
+                                <hr> -->
+                                <hr>
+                                <small class="text-muted">Abbas Majidov - 2022</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Modal -->
+            <div class="modal fade" id="result" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body d-flex justify-content-center">
+                            <img id="ss" ref="render" class="img-fuild result" :src="renderedImage" alt="">
+                        </div>
+                        <div class="modal-footer">
+                            <a :href="renderedImage" class="btn btn-primary" download>{{langs[selectedLang].download}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <template v-if="loading">
+                <div v-if="loading" id="spinner">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <img :style="{'animation-play-state': error ? 'paused' : ''}" class="img-fuild" src="assets/img/Smlogo.svg" alt="">
+                        <p class="text-white">{{ error ?? langs[selectedLang][server] }}</p>
+                    </div>
+                </div>
+            </template>
+
+        </template>
+
+    </div>
+
+    <script src="assets/js/vue.js"></script>
+    <script src="assets/js/axios.min.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/app.js"></script>
+
+
+</body>
+
+</html>

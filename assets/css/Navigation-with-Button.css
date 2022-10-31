@@ -1,0 +1,23 @@
+.left-button, .right-button{
+  font-size: 1.26em;
+  cursor: pointer;
+}
+
+.navigation-clean-button .navbar-text .action-button:hover {
+  background: #66d7d7;
+}
+
+.navigation-clean-button.navbar-dark .action-button, .navigation-clean-button.navbar-dark .action-button:active {
+  background: #208f8f;
+}
+
+.navigation-clean-button.navbar-dark .action-button:hover {
+  background: #269d9d;
+}
+
+.toggle-button {
+  position: absolute;
+  right: calc(var(--dist) / 2);
+  font-size: 1.5em;
+}
+

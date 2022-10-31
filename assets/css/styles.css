@@ -1,0 +1,160 @@
+* {
+  --smoky-black: #0f0f0f;
+  --jet: #2d2e2e;
+  --seashell: #fef5ef;
+  --cgblue: #247ba0;
+  --dist: 1.95em;
+}
+
+#logo {
+  width: 17vw;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.navbar {
+  padding: 1.95em;
+  background-color: var(--cgblue);
+  box-shadow: 0px 0px 5px 0px #888888;
+  margin-bottom: 1.95em;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--smoky-black);
+}
+
+.text-input {
+  min-height: calc(100vh / 1.95);
+  border-radius: 1.95px;
+  resize: none;
+  background-color: #2d2d2e;
+  color: #f2f5f8;
+}
+
+#settings {
+  color: var(--cgblue);
+  font-size: 1.15em;
+}
+
+.size {
+  width: 4em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.size > label > * {
+  background-color: #2d2d2e;
+  color: #f2f5f8;
+}
+
+.btn.btn-primary.btn-block {
+  background-color: var(--cgblue);
+}
+
+#w
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2em;
+}
+
+
+.card, .modal-content{
+  background-color: #2d2d2e;
+  border: none;
+  color: #f2f5f8;
+}
+
+.modal-header, .modal-footer{
+  border: none;
+}
+
+.text-muted, button.close {
+  color: #b8b8b8!important;
+  text-shadow: none;
+}
+
+.form-control, .form-control:focus
+{
+  background-color: #2d2d2e;
+  color: #f2f5f8;
+}
+
+#spinner
+{
+  background-color: rgba(0, 0, 0, .85);
+  min-width: 100vw; min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  position: fixed;
+  top: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.result{
+  width: 25em;
+}
+
+#spinner > p 
+{
+  font-size: 1.86em;
+}
+
+#spinner > div > img
+{
+  animation: spinner .86s ease infinite alternate-reverse;
+  width: 4em;
+  margin-bottom: var(--dist);
+  opacity: 1;
+  filter: invert(1);
+}
+
+@keyframes spinner {
+  from{
+    opacity: 1;
+  }
+  to{
+    opacity: 0;
+  }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+@media (max-width:992px) {
+  .side {
+    background-color: rgba(0, 0, 0, .85);
+    min-width: 100vw; min-height: 100vh;
+    overflow: hidden;
+    display: flex!important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  }
+}
+
+.form-control:disabled {
+  background-color: #2d2d2e;
+}
+
+a > img {
+  display: none;
+}
