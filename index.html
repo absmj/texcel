@@ -113,7 +113,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-end pb-2">
-                                        <button :disabled = "(error || !text) && 0" @click="generate" class="btn btn-primary btn-block" type="button">{{langs[selectedLang].generate}}</button>
+                                        <button :disabled = "(error || !text || (!image.file && image.status)) && 0" @click="generate" class="btn btn-primary btn-block" type="button">{{langs[selectedLang].generate}}</button>
                                     </div>
                                 </div>
                                 <small :class="error ? 'text-danger' : 'text-muted'" class="form-text ml-4 ml-sm-0">{{langs[selectedLang][error ?? info] + (info == 'aspectRatio' && !error ? aspectRatio : '') }}</small>

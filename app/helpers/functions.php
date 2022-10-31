@@ -63,7 +63,7 @@ function textValidation()
 function show404()
 {
     echo "Not Found";
-    header("Content-Type: text/plain", true, 400);
+    header("Content-Type: text/plain", true, 404);
     exit;
 }
 

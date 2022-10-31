@@ -20,6 +20,7 @@ class Texel
             if($_POST["image"]) {
                 if(!$coverImage) {
                     echo "File isn't found.";
+                    header("Content-Type: plain/text", true, 400);
                     exit;
                 }
             }
@@ -46,7 +47,7 @@ class Texel
                 return;
             } catch (Exception $e) {
                 echo $e->message;
-                header("Content-Type: text/plain", true, 500);
+                header("Content-Type: text/plain", true, 400);
                 // http_response_code(500);
             }
 
