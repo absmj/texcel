@@ -1,0 +1,20 @@
+{
+  "name": "texcel",
+  "version": "1.0.0",
+  "description": "TexCel",
+  "author": "Abbas Majidov",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/absmj/texcel"
+  },
+  "bugs": {
+  },
+  "homepage": "https://texcel.wel.az",
+  "devDependencies": {
+    
+  },
+  "scripts": {
+   
+  }
+}
