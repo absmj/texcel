@@ -252,7 +252,7 @@ new Vue({
                 }
             }
             catch(e){
-                this.error = e.request.response
+                this.error = e.request.response ?? "Xəta baş verib! Ola bilsin, forma düzgün doldurulmayıb";
             }  
         },
         

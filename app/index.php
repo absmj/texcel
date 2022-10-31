@@ -1,5 +1,5 @@
 <?php
-require "../autoload.php";
+require "loader.php";
 
 $URI = explode("/", parse_url(str_replace("/index.php", "", $_SERVER["REQUEST_URI"]), PHP_URL_PATH));
 // dd($URI);

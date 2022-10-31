@@ -24,6 +24,6 @@ defined("INITIAL_STATE") || define("INITIAL_STATE", [
 ]);
 
 /* Render Path */
-defined("RENDER_PATH") || define("RENDER_PATH", __DIR__ ."/app/render/");
+defined("RENDER_PATH") || define("RENDER_PATH", __DIR__ ."/render/");
 
 define('BASEURL', realpath(__DIR__));
