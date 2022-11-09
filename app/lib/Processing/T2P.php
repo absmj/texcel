@@ -229,10 +229,6 @@ class T2P
 
         if($this->state->image && !$this->state->iterations)
             $this->locateImage();
-        
-
-            $gaussian = array(array(8.0, 16.0, 8.0), array(32.0, 64.0, 32.0), array(8.0, 16.0, 8.0));
-            imageconvolution($this->renderedImage, $gaussian, 256, 0);
 
         $this->blur();
         return $this;
