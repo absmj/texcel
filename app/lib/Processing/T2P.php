@@ -14,6 +14,7 @@ class T2P
     public $yPixelSize;
     public $pixelArray;
     public $binnedText;
+    public $binArray;
     public $image;
 
     private function __construct($state)
@@ -63,8 +64,51 @@ class T2P
 
     private function generatePixelColor() : T2P
     {
-        foreach(str_split($this->bin2Hex(), 6) as $color)
+        $this->binArray = str_split($this->bin2Hex(), 6);
+        foreach($this->binArray as $color)
             $this->pixelArray[] = Math::hexToRgb($color);
+
+        
+        if($this->state->optional['sorting']) {
+            switch($this->state->optional['sorting']) {
+                case SORTING['A-Z']:
+                    uasort($this->pixelArray, function($a, $b) {
+                        $a = Math::rgbToHsl($a);
+                        $b = Math::rgbToHsl($b);
+                        // dd($a);
+                        if(!Math::hueAreInSameInterval($a['h'], $b['h'])) {
+                            if($a['h'] < $b['h']) return -1;
+                            if($a['h'] > $b['h']) return 1;
+                        }
+        
+                        if($a['l'] < $b['l']) return 1;
+                        if($a['l'] > $b['l']) return -1;
+                        if($a['s'] < $b['s']) return -1;
+                        if($a['s'] > $b['s']) return 1;
+        
+                    });
+                    break;
+
+                case SORTING['Z-A']:
+                    uasort($this->pixelArray, function($a, $b) {
+                        $a = Math::rgbToHsl($a);
+                        $b = Math::rgbToHsl($b);
+        
+                        if(!Math::hueAreInSameInterval($a['h'], $b['h'])) {
+                            if($a['h'] < $b['h']) return 1;
+                            if($a['h'] > $b['h']) return -1;
+                        }
+        
+                        if($a['l'] < $b['l']) return -1;
+                        if($a['l'] > $b['l']) return 1;
+                        if($a['s'] < $b['s']) return 1;
+                        if($a['s'] > $b['s']) return -1;
+        
+                    });
+                    break;
+            }
+            $this->pixelArray = array_values($this->pixelArray);   
+        }
 
         return $this;
     }
@@ -124,6 +168,31 @@ class T2P
         }
     }
 
+    private function blur()
+    {
+        if(!(int)$this->state->optional['blur']) return;
+        
+        $blur = 100 - $this->state->optional['blur'];
+
+        $s1x = Math::percent($this->state->width, $blur);
+        $s1y = Math::percent($this->state->height, $blur);
+        $s_img1 = imagecreatetruecolor($s1x,$s1y);
+        imagecopyresampled($s_img1, $this->renderedImage, 0, 0, 0, 0, $s1x, $s1y, $this->state->width, $this->state->height);
+        imagefilter($s_img1, IMG_FILTER_GAUSSIAN_BLUR);
+      
+        $s2x = Math::percent($s1x, 200);
+        $s2y = Math::percent($s1y, 200);
+        $s_img2 = imagecreatetruecolor($s2x,$s2y);
+        imagecopyresampled($s_img2, $s_img1, 0, 0, 0, 0, $s2x, $s2y, $s1x, $s1y);
+        imagedestroy($s_img1);
+        imagefilter($s_img2, IMG_FILTER_GAUSSIAN_BLUR);
+      
+        imagecopyresampled($this->renderedImage, $s_img2, 0, 0, 0, 0, $this->state->width, $this->state->height, $s2x, $s2y);
+        imagedestroy($s_img2);
+        imagefilter($this->renderedImage, IMG_FILTER_GAUSSIAN_BLUR);
+        return $this;
+    }
+
     public function colorize()
     {
         $i = 0;        
@@ -156,9 +225,12 @@ class T2P
             }
         }
         
+        
+
         if($this->state->image && !$this->state->iterations)
             $this->locateImage();
-        
+
+        $this->blur();
         return $this;
     }
 
