@@ -10,6 +10,8 @@ function dd($data, $dump = false)
 function keyValidation(array $keys, array $array)
 {
     foreach($keys as $key)
+        if($key == 'optional') continue;
+        
         if(!array_key_exists($key, $array))
             return;
     

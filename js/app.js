@@ -37,7 +37,16 @@ const az =  {
     loading: `Hazırlanır...`,
     rendered: `Şəkilin emalı tamamlanıb. Təsvir yüklənir...`,
     renderedInfo: `%s ədəd unikal rəng; Hər bir pikselin sahəsi: %sx%s`,
-    file: `Fayl yüklənməyib`
+    file: `Fayl yüklənməyib`,
+    sorting: `Çeşidlə`,
+    sortingType: `Çeşidlənmə tipi`,
+    sortingTypes: ['Artan', 'Azalan'],
+    sortingHelper: `Piksellərin çeşidlənməsi`,
+    filter: "Filter",
+    onPicture: "Şəkil üzərində",
+    onText: "Mətn üzərində",
+    blur: "Bulanıqlıq",
+    blurValue: "Bulanıqlıq əmsalı"
 };
 
 const en = [
@@ -69,7 +78,17 @@ const en = [
     `Download`,
     `Preparing...`,
     `Image processing is complete. Loading image...`,
-    `%s number of unique colors; Area of ​​each pixel: %sx%s`
+    `%s number of unique colors; Area of ​​each pixel: %sx%s`,
+    `File is empty`,
+    `Sorting`,
+    `Sorting type`,
+    ['A-Z', 'Z-A'],
+    `Sorting pixels`,
+    "Filter",
+    "On the picture",
+    "On the text",
+    "Blur",
+    "Blur percent"
 ];
 
 const createLang = (source, lang) =>
@@ -89,8 +108,12 @@ new Vue({
             image: {
                 status: false,
                 file: '',
-                iterations: true
+                iterations: false,
+                opacity: 30,
+                blur: false
             },
+            sorting: false,
+            sortingType: 0,
             repeating: true,
             shape: 1,
             samples: 1,
@@ -100,17 +123,24 @@ new Vue({
             server: 'loading',
             error: null,
             download: null,
-            selectedLang: 'az',
+            selectedLang: 'en',
             sizeSwitcher: 1,
             langs: {
                 az,
                 en: createLang(az, en),
                 list(){
-                    Object.values(this).filter(v => typeof v !== 'function')
+                    const langList = [];
+                    const objKeys = Object.keys(this);
+                    for(let lang in objKeys) {
+                        if(typeof this[objKeys[lang]] === 'function') continue;
+                        langList.push(objKeys[lang])
+                    }
+                    return langList
                 }
             },
             leftSide: false,
-            rightSide: false
+            rightSide: false,
+            blur: 0
         }
     },
 
@@ -222,7 +252,8 @@ new Vue({
             form.append("image", Number(this.image.status))
             form.append("coverImage", this.image.file || '')
             form.append("iterations", Number(this.image.iterations))
-            
+            form.append("optional[sorting]", Number(this.sorting ? this.sortingType + 1 : false))
+            form.append("optional[blur]", Number(this.blur))
             return form;
         },
 

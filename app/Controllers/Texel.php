@@ -15,6 +15,10 @@ class Texel
 
     public function index()
     {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: *');
+        header('Access-Control-Allow-Headers: *');
+        header('Content-Type: application/json;charset=utf-8');
         if(keyValidation(array_keys(INITIAL_STATE), $_POST)){
             $coverImage = $_FILES['coverImage'] ?? null;
             if($_POST["image"]) {
@@ -34,14 +38,14 @@ class Texel
                 $filename = time().".png";
                 imagepng($render->renderedImage, RENDER_PATH . $filename);
                 imagedestroy($render->renderedImage);
-
-                header("Content-Type: application/json");
                 echo json_encode( 
                         [
+                            'uniqueColors'  => count(array_unique($render->binArray)),
                             'pixelCount'    => count($render->pixelArray),
                             'xPixelSize'    => $render->xPixelSize, 
                             'yPixelSize'    => $render->yPixelSize, 
-                            'rendered'      => $filename
+                            'rendered'      => $filename,
+                            'sorting'       => $_POST['sorting'] ?? 0
                         ]
                 );
                 return;

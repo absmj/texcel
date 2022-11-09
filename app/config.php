@@ -20,7 +20,17 @@ defined("INITIAL_STATE") || define("INITIAL_STATE", [
     'iterations'    => 1,
     'shape'         => 2,
     'repeating'     => 1,
-    'iterations'    => 1
+    'optional'      => [
+        'sorting'       => false,
+        'blur'          => false
+    ]
+
+]);
+
+/* Sorting types */
+defined("SORTING")       || define("SORTING", [
+    'A-Z'           => 1,
+    'Z-A'           => 2
 ]);
 
 /* Render Path */

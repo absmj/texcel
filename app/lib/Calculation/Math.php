@@ -80,4 +80,53 @@ class Math
         }
         return $rgb;
     }
+
+    public static function rgbToHsl($rgb)
+    {
+        list($r, $g, $b) = [$rgb['r'], $rgb['g'], $rgb['b']];
+
+        $r /= 255;
+        $g /= 255;
+        $b /= 255;
+
+        $max = max($r, $g, $b);
+        $min = min($r, $g, $b);
+
+        $h = 0;
+        $l = ($max + $min) / 2;
+        $d = $max - $min;
+
+        if($d == 0) {
+            $h = $s = 0;
+        } else {
+            $s = $d / (1 - abs(2 * $l - 1));
+
+            switch ($max) {
+                case $r:
+                    $h = 60 * fmod((($g - $b) / $d), 6);
+                    if($b > $g) $h += 360;
+                    break;
+
+                case $g:
+                    $h = 60 * (($g - $r) / $d + 2);
+                    break;
+
+                case $b:
+                    $h = 60 * (($g - $b) / $d + 4);
+                    break;
+            }
+        }
+
+        return ['h' => round($h, 2), 's' => round($s, 2), 'l' => round($l, 2)];
+    }
+
+    public static function hueAreInSameInterval($hue1, $hue2, $interval = 30)
+    {
+        return (round(($hue1 / $interval), 0, PHP_ROUND_HALF_DOWN)) === (round(($hue2 / $interval), 0, PHP_ROUND_HALF_DOWN));
+    }
+
+    public static function percent($number, $percent)
+    {
+        return round($number * $percent / 100);
+    }
 }

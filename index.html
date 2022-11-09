@@ -39,7 +39,7 @@
                                     </button>
                                 </h4>
                                 <!-- Filling -->
-                                <div id="filling">
+                                <div>
                                     <h6 class="text-muted card-subtitle mb-2">{{langs[selectedLang].filling}}</h6>
                                     <div class="form-check">
                                         <input v-model="image.status" class="form-check-input" type="checkbox" value="" id="defaultCheck1">
@@ -75,7 +75,7 @@
                                 <hr>
                                 <hr>
                                 <!-- Shape -->
-                                <div id="filling">
+                                <div>
                                     <h6 class="text-muted card-subtitle mb-2">{{langs[selectedLang].shape}}</h6>
                                     <div class="form-group">
                                         <label class="form-label" for="defaultCheck1">
@@ -85,6 +85,40 @@
                                             <option v-for="(shape, k) in langs[selectedLang].shapes" :key="k" :value="k + 1">{{shape}}</option>
                                         </select>
                                     </div>
+                                </div>
+                                <hr>
+                                <!-- Blur -->
+                                <div>
+                                    <h6 class="text-muted card-subtitle mb-2">{{langs[selectedLang].blur}}</h6>
+                                    <div class="form-group">
+                                        <label class="form-label" for="bluring">
+                                            {{langs[selectedLang].blurValue}} - {{blur}}%
+                                        </label>
+                                        <input id="bluring" @change="blur = $event.target.value" type="range" class="form-range" value="0" name="blur" min="0" max="100" step="0.5">
+                                    </div>
+                                </div>
+
+                                <!-- Sorting -->
+                                <div>
+                                    <h6 class="text-muted card-subtitle mb-2">{{langs[selectedLang].sorting}}</h6>
+                                    <div class="form-check">
+                                        <input v-model="sorting" class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            {{langs[selectedLang].sortingType}}
+                                        </label>
+                                    </div>
+
+                                    <template v-if="sorting">
+                                        <div v-for="(i, k) in langs[selectedLang].sortingTypes" :key="k" class="form-check">
+                                            <input v-model="sortingType" class="form-check-input" type="radio" :value="k" id="defaultCheck5">
+                                            <label class="form-check-label" for="defaultCheck5">
+                                                {{i}}
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">{{langs[selectedLang].sortingHelper}}</small>
+                                    </template>
+                                    <hr>
+                                    
                                 </div>
         
                             </div>
@@ -127,6 +161,16 @@
                     </div>
                     <div class="col-3 d-none d-lg-block" :class="rightSide ? 'side' : ''">
                         <div class="card">
+                            <div class="card-subtitle">
+                                <ul class="nav nav-pills d-flex justify-content-end">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{selectedLang}}</a>
+                                        <div class="dropdown-menu">
+                                            <a v-for="(lang, k) in langs.list()" :key="k" class="dropdown-item" :class="lang == selectedLang ? 'active' : ''" href="#" @click="selectedLang = lang">{{lang}}</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
                             <div class="card-body">
                                 <h4 class="card-title">{{langs[selectedLang].usersGuide}}
                                     <button @click="rightSide = false" class="close d-lg-none" type="button" aria-label="Close">
@@ -140,7 +184,8 @@
                                     <button @click="loadSample('delikur.txt')" class="btn btn-primary badge badge-pill badge-primary">İ.Şıxlı, "Dəli Kür"</button>
                                     <button @click="loadSample('kimyager.txt')" class="btn btn-primary badge badge-pill badge-primary">Paulo Coelho, "Kimyagər"</button>
                                 </div>
-                                <hr>
+                                <!-- <hr> -->
+
                                 <!-- <hr>
                                 <div>
                                     <h6 class="text-muted card-subtitle mb-2">How its works?</h6>
